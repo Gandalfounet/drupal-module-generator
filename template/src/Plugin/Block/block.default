@@ -1,0 +1,33 @@
+<?php
+
+namespace Drupal\{{module_name}}\Plugin\Block;
+
+use Drupal\Core\Block\BlockBase;
+
+/**
+ * Provides a block with a simple text.
+ *
+ * @Block(
+ *   id = "{{id}}",
+ *   admin_label = @Translation("{{visible_name}}"),
+ * )
+ */
+class {{name}}Block extends BlockBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build() {
+    return [
+      '#theme' => '{{theme}}',
+      '#attached' => [
+        'library' => [
+{{libs}}
+        ],
+        'drupalSettings' => [],
+      ],
+    ];
+
+  }
+
+}

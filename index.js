@@ -9,11 +9,13 @@ var mkdirp = require('mkdirp');
 mkdirp("./" + config.name + "/src/Controller");
 mkdirp("./" + config.name + "/src/Form");
 mkdirp("./" + config.name + "/src/Plugin");
+mkdirp("./" + config.name + "/src/Plugin/Block");
 mkdirp("./" + config.name + "/js");
 mkdirp("./" + config.name + "/templates");
 
 setTimeout(function() {
 	Info();
+	Blocks();
 	Services();
 }, 3000)
 
@@ -72,7 +74,32 @@ function Forms () {
 }
 
 function Blocks () {
+	if (config.blocks.length > 0) {
+		const content = fs.readFileSync('./template/src/Plugin/Block/block.default', 'utf8');
+		for (let key in config.blocks) {
+			const block = config.blocks[key];
+			let contentBlock = content;
 
+			contentBlock = contentBlock.replace(/{{module_name}}/g, config.name.toLowerCase());
+			contentBlock = contentBlock.replace(/{{id}}/g, block.id);
+			contentBlock = contentBlock.replace(/{{visible_name}}/g, block.visible_name);
+			contentBlock = contentBlock.replace(/{{name}}/g, block.name);
+			contentBlock = contentBlock.replace(/{{theme}}/g, block.theme);
+			let libs = "";
+			for (let key in block.libs) {
+				libs += "          \"" + block.libs[key] + "\"" + ",";
+				if (key < block.libs.length - 1) {
+					libs += "\n\r";
+				}
+			}
+			contentBlock = contentBlock.replace(/{{libs}}/g, libs);
+
+			fs.appendFile("./" + config.name + "/src/Plugin/Block/" + capitalize(block.name) + "Block.php", contentBlock, function (err) {
+			  if (err) throw err;
+			  console.log('Saved!');
+			});
+		}
+	}
 }
 
 /**

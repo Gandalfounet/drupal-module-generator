@@ -138,13 +138,14 @@
    "blocks":[ 
       { 
          "name":"Block1",
+         "visible_name" : "Block 1",
+         "id" : "block_1",
          "theme":"theme1",
          "libs":[ 
             "mf_tools_common/mf_tools_common",
             "mf_tools_common/mf_tools_common.vue",
             "module_name/lib1"
-         ],
-         "enable_cache_tags":true
+         ]
       }
    ],
    "routes":[ 
