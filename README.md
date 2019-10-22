@@ -32,6 +32,12 @@ cd drupal-module-generator
 npm install
 ```
 
+### Config 
+
+Your module will be generated using the config.json file. Make sure to correctly fill the json to generate the files.
+
+Doc incoming.
+
 ### Run 
 
 ```
