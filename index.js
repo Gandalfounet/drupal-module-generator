@@ -6,15 +6,26 @@ const config = require('./config.json');
 
 var mkdirp = require('mkdirp');
 
-mkdirp("./" + config.name + "/src/Controller");
-mkdirp("./" + config.name + "/src/Form");
-mkdirp("./" + config.name + "/src/Plugin");
-mkdirp("./" + config.name + "/src/Plugin/Block");
+if(config.controllers.length > 0) {
+	mkdirp("./" + config.name + "/src/Controller");
+}
+if(config.forms.length > 0) {
+	mkdirp("./" + config.name + "/src/Form");
+}
+if(config.blocks.length > 0) {
+	mkdirp("./" + config.name + "/src/Plugin");
+  mkdirp("./" + config.name + "/src/Plugin/Block");
+}
+if(config.themes.length > 0) {
+	mkdirp("./" + config.name + "/templates");
+}
 mkdirp("./" + config.name + "/js");
-mkdirp("./" + config.name + "/templates");
+
 
 setTimeout(function() {
 	Info();
+	Controllers();
+  Forms();
 	Blocks();
 	Services();
 }, 3000)
@@ -66,11 +77,52 @@ function Routing () {
 }
 
 function Controllers () {
+	if (config.controllers.length > 0) {
+		const content = fs.readFileSync('./template/src/Controller/controller.default', 'utf8');
+		for (let key in config.controllers) {
+			const controller = config.controllers[key];
+			let newContent = content;
 
+			newContent = newContent.replace(/{{module_name}}/g, config.name.toLowerCase());
+			newContent = newContent.replace(/{{formated_name}}/g, ModuleNameFormated());
+			newContent = newContent.replace(/{{name}}/g, controller.name);
+			newContent = newContent.replace(/{{theme}}/g, controller.theme);
+			let libs = "";
+			for (let key in controller.libs) {
+				libs += "          \"" + controller.libs[key] + "\"" + ",";
+				if (key < controller.libs.length - 1) {
+					libs += "\n\r";
+				}
+			}
+			newContent = newContent.replace(/{{libs}}/g, libs);
+
+			fs.appendFile("./" + config.name + "/src/Controller/" + ModuleNameFormated() + capitalize(controller.name) + "Controller.php", newContent, function (err) {
+			  if (err) throw err;
+			  console.log('Saved!');
+			});
+		}
+	}
 }
 
 function Forms () {
+	if (config.forms.length > 0) {
+		const content = fs.readFileSync('./template/src/Form/form.default', 'utf8');
+		for (let key in config.forms) {
+			const form = config.forms[key];
+			let newContent = content;
 
+			newContent = newContent.replace(/{{module_name}}/g, config.name.toLowerCase());
+			newContent = newContent.replace(/{{formated_name}}/g, ModuleNameFormated());
+			newContent = newContent.replace(/{{name}}/g, form.name);
+			newContent = newContent.replace(/{{form_id}}/g, form.id);
+
+
+			fs.appendFile("./" + config.name + "/src/Form/" + ModuleNameFormated() + capitalize(form.name) + "Form.php", newContent, function (err) {
+			  if (err) throw err;
+			  console.log('Saved!');
+			});
+		}
+	}
 }
 
 function Blocks () {
@@ -78,13 +130,14 @@ function Blocks () {
 		const content = fs.readFileSync('./template/src/Plugin/Block/block.default', 'utf8');
 		for (let key in config.blocks) {
 			const block = config.blocks[key];
-			let contentBlock = content;
+			let newContent = content;
 
-			contentBlock = contentBlock.replace(/{{module_name}}/g, config.name.toLowerCase());
-			contentBlock = contentBlock.replace(/{{id}}/g, block.id);
-			contentBlock = contentBlock.replace(/{{visible_name}}/g, block.visible_name);
-			contentBlock = contentBlock.replace(/{{name}}/g, block.name);
-			contentBlock = contentBlock.replace(/{{theme}}/g, block.theme);
+			newContent = newContent.replace(/{{module_name}}/g, config.name.toLowerCase());
+			newContent = newContent.replace(/{{formated_name}}/g, ModuleNameFormated());
+			newContent = newContent.replace(/{{id}}/g, block.id);
+			newContent = newContent.replace(/{{visible_name}}/g, block.visible_name);
+			newContent = newContent.replace(/{{name}}/g, block.name);
+			newContent = newContent.replace(/{{theme}}/g, block.theme);
 			let libs = "";
 			for (let key in block.libs) {
 				libs += "          \"" + block.libs[key] + "\"" + ",";
@@ -92,9 +145,9 @@ function Blocks () {
 					libs += "\n\r";
 				}
 			}
-			contentBlock = contentBlock.replace(/{{libs}}/g, libs);
+			newContent = newContent.replace(/{{libs}}/g, libs);
 
-			fs.appendFile("./" + config.name + "/src/Plugin/Block/" + capitalize(block.name) + "Block.php", contentBlock, function (err) {
+			fs.appendFile("./" + config.name + "/src/Plugin/Block/" + ModuleNameFormated() + capitalize(block.name) + "Block.php", newContent, function (err) {
 			  if (err) throw err;
 			  console.log('Saved!');
 			});

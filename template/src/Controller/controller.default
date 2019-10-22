@@ -1,0 +1,44 @@
+<?php
+
+namespace Drupal\{{module_name}}\Controller;
+
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * {{formated_name}}{{name}}Controller
+ */
+class {{formated_name}}{{name}}Controller extends ControllerBase {
+  /**
+   * Returns a render-able array for a test page.
+   */
+  public function content() {
+    $build = [];
+    $build['heading'] = [
+      '#theme' => '{{theme}}',
+      '#attached' => [
+        'library' => [
+{{libs}}
+        ],
+        'drupalSettings' => [],
+      ],
+    ];
+    return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  private function sendErrorJson($err = 'An error occured') {
+    $err_msg = $err;
+    $errors = [
+      'error' => [
+        'code' => '500',
+        'message' => $err_msg,
+      ],
+    ];
+    return new JsonResponse($errors, 500);
+  }
+
+}

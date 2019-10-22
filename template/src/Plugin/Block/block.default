@@ -12,7 +12,7 @@ use Drupal\Core\Block\BlockBase;
  *   admin_label = @Translation("{{visible_name}}"),
  * )
  */
-class {{name}}Block extends BlockBase {
+class {{formated_name}}{{name}}Block extends BlockBase {
 
   /**
    * {@inheritdoc}
