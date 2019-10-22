@@ -1,0 +1,23 @@
+{
+  "name": "drupal-module-generator",
+  "version": "1.0.0",
+  "description": "Generate a drupal module using nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gandalfounet/drupal-module-generator.git"
+  },
+  "author": "Zi Boss",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gandalfounet/drupal-module-generator/issues"
+  },
+  "homepage": "https://github.com/Gandalfounet/drupal-module-generator#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "mkdirp": "^0.5.1"
+  }
+}

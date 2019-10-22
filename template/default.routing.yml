@@ -1,0 +1,19 @@
+#Admin homepage
+{{module_name}}.{{route_name}}:
+  path: '{{route_path}}'
+  defaults:
+    _controller: '\Drupal\{{module_name}}\Controller\{{module_name_formated}}{{route_controller}}Controller::{{route_method}}'
+    _title: '{{route_title}}'
+  requirements:
+    _permission: '{{route_requirements}}'
+  options:
+    _admin_route: TRUE
+
+#Get all the settings
+{{module_name}}.{{route_name}}:
+  path: '{{route_path}}'
+  defaults:
+    _controller: '\Drupal\{{module_name}}\Controller\{{module_name_formated}}{{route_controller}}Controller::{{route_method}}'
+    _title: '{{route_title}}'
+  requirements:
+    _permission: '{{route_requirements}}'

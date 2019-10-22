@@ -1,0 +1,2 @@
+    {{module_name}}.{{service_id}}:
+        class: Drupal\{{module_name}}\{{service_name}}Service

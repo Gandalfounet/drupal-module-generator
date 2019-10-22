@@ -1,0 +1,6 @@
+name: {{public_name}}
+type: {{type}}
+description: {{description}}
+core: 8.x
+package: {{package}}
+{{dependencies}}

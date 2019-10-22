@@ -1,0 +1,10 @@
+<?php
+
+namespace Drupal\{{module_name}};
+
+/**
+ * {{service_name}}Service is a simple exampe of a Drupal 8 service.
+ */
+class {{service_name}}Service {
+  
+}
