@@ -24,6 +24,7 @@ mkdirp("./" + config.name + "/js");
 
 setTimeout(function() {
 	Info();
+	Libraries();
 	Controllers();
   Forms();
 	Blocks();
@@ -44,7 +45,7 @@ function Info () {
 	let dependencies = "";
 	if (config.dependencies.length > 0) {
 		dependencies = "dependencies:\r\n";
-		for (var key in config.dependencies) {
+		for (let key in config.dependencies) {
 			dependencies += "  - " + config.dependencies[key] + "\r\n";
 		}
 	}
@@ -61,7 +62,53 @@ function Db () {
 }
 
 function Libraries () {
+	if (config.libraries.length > 0) {
+		const defaultLib = fs.readFileSync('./template/default.libraries.yml', 'utf8');
+		let contentFile = "";
 
+		for (let key in config.libraries) {
+			const library = config.libraries[key];
+
+			let contentYml = defaultLib;
+
+			contentYml = contentYml.replace(/{{name}}/g, library.name.toLowerCase());
+			contentYml = contentYml.replace(/{{version}}/g, library.version);
+			let css = "";
+			if (library.css && library.css.theme && library.css.theme.length > 0) {
+				css += "	css:\r\n";
+				css += "		theme:\r\n";
+				for (let key in library.css.theme) {
+					css += "			" + library.css.theme[key].path + ":" + JSON.stringify(library.css.theme[key].params);
+				}
+			}
+			let js = "";
+			if (library.js && library.js.length > 0) {
+				js += "	js:\r\n";
+				for (let key in library.js) {
+					js += "		" + library.js[key].path + ":" + JSON.stringify(library.js[key].params);
+				}
+			}
+			let dependencies = "";
+			if (library.dependencies.length > 0) {
+				dependencies = "dependencies:\r\n";
+				for (let key in library.dependencies) {
+					dependencies += "  - " + library.dependencies[key] + "\r\n";
+				}
+			}
+			contentYml = contentYml.replace(/{{css}}/g, css);
+			contentYml = contentYml.replace(/{{js}}/g, js);
+			contentYml = contentYml.replace(/{{dependencies}}/g, dependencies);
+
+
+			contentFile += contentYml + "\r\n";
+
+		}
+
+		fs.appendFile("./" + config.name + "/" + config.name + ".libraries.yml", contentFile, function (err) {
+		  if (err) throw err;
+		  console.log('Saved!');
+		});
+	}
 }
 
 function MenuLinks () {
@@ -163,7 +210,7 @@ function Services () {
 		const serviceYmlDefault = fs.readFileSync('./template/default.services.yml', 'utf8');
 		const serviceClassDefault = fs.readFileSync('./template/src/Services/service.default', 'utf8');
 		let serviceYml = "services:\r\n";
-		
+
 
 		for (let key in config.services) {
 			const service = config.services[key];
@@ -198,7 +245,7 @@ function Js () {
 function ModuleNameFormated () {
 	let formatName = "";
 	const splitName = config.name.split("_");
-	for (var key in splitName) {
+	for (let key in splitName) {
 		formatName += capitalize(splitName[key]);
 	}
 	return formatName;

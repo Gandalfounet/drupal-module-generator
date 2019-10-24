@@ -1,0 +1,5 @@
+{{name}}:
+  version: {{version}}
+{{css}}
+{{js}}
+{{dependencies}}
