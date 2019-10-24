@@ -1,0 +1,6 @@
+{{module_name}}.{{name}}:
+  title: '{{title}}'
+  route_name: {{route}}
+  description: '{{description}}'
+  parent: {{parent}}
+  weight: {{weight}}

@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Module file.
+ */
+
+define('{{module_name_uppercase}}', drupal_get_path('module', '{{module_name}}'));
+
+/**
+ * {@inheritdoc}
+ */
+function {{module_name}}_theme() {
+  return [
+{{themes}}
+  ];
+}

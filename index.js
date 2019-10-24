@@ -24,11 +24,16 @@ mkdirp("./" + config.name + "/js");
 
 setTimeout(function() {
 	Info();
+	Db();
 	Libraries();
+	MenuLinks();
+	Themes();
+	Routing();
 	Controllers();
-  Forms();
+	Forms();
 	Blocks();
 	Services();
+	Js();
 }, 3000)
 
 /**
@@ -51,7 +56,7 @@ function Info () {
 	}
 	content = content.replace(/{{dependencies}}/g, dependencies);
 
-	fs.appendFile("./" + config.name + "/" + config.name + ".info.yml", content, function (err) {
+	fs.writeFile("./" + config.name + "/" + config.name + ".info.yml", content, function (err) {
 	  if (err) throw err;
 	  console.log('Saved!');
 	});
@@ -104,7 +109,7 @@ function Libraries () {
 
 		}
 
-		fs.appendFile("./" + config.name + "/" + config.name + ".libraries.yml", contentFile, function (err) {
+		fs.writeFile("./" + config.name + "/" + config.name + ".libraries.yml", contentFile, function (err) {
 		  if (err) throw err;
 		  console.log('Saved!');
 		});
@@ -112,15 +117,88 @@ function Libraries () {
 }
 
 function MenuLinks () {
+	if (config.BO_menu_links.length > 0) {
+		const content = fs.readFileSync('./template/default.links.menu.yml', 'utf8');
+		for (let key in config.BO_menu_links) {
+			const menulink = config.BO_menu_links[key];
+			let newContent = content;
 
+			newContent = newContent.replace(/{{module_name}}/g, config.name.toLowerCase());
+			newContent = newContent.replace(/{{name}}/g, menulink.name);
+			newContent = newContent.replace(/{{title}}/g, menulink.title);
+			newContent = newContent.replace(/{{route}}/g, menulink.route);
+			newContent = newContent.replace(/{{description}}/g, menulink.description);
+			newContent = newContent.replace(/{{parent}}/g, menulink.parent);
+			newContent = newContent.replace(/{{weight}}/g, menulink.weight);
+
+			fs.writeFile("./" + config.name + "/" + config.name + ".links.menu.yml", newContent, function (err) {
+			  if (err) throw err;
+			  console.log('Saved!');
+			});
+		}
+	}
 }
 
 function Themes () {
+	if (config.themes.length > 0) {
+		const content = fs.readFileSync('./template/default.module', 'utf8');
 
+		let newContent = content;
+		newContent = newContent.replace(/{{module_name_uppercase}}/g, config.name.toUpperCase());
+		newContent = newContent.replace(/{{module_name}}/g, config.name.toLowerCase());
+		let themeContent = "";
+		for (let key in config.themes) {
+			const theme = config.themes[key];
+			fs.writeFile("./" + config.name + "/templates/" + theme.template_name + ".html.twig", "", function (err) {
+			  if (err) throw err;
+			  console.log('Saved!');
+			});			
+			
+			
+			themeContent += "		'" + theme.name + "' => [\r\n";
+			themeContent += "			'variables' => ['example_variable' => NULL],\r\n";
+			themeContent += "			'template' => '" + theme.template_name + "',\r\n";
+			themeContent += "		],\r\n";
+		}
+		newContent = newContent.replace(/{{themes}}/g, themeContent);
+
+		fs.writeFile("./" + config.name + "/" + config.name + ".module", newContent, function (err) {
+		  if (err) throw err;
+		  console.log('Saved!');
+		});
+	}
 }
 
 function Routing () {
+	if (config.routes.length > 0) {
+		const content = fs.readFileSync('./template/default.routing.yml', 'utf8');
+		let newContent = "";
+		for (let key in config.routes) {
+			const route = config.routes[key];
+			let tmpContent = content;
 
+			tmpContent = tmpContent.replace(/{{module_name}}/g, config.name.toLowerCase());
+			tmpContent = tmpContent.replace(/{{route_name}}/g, route.name);
+			tmpContent = tmpContent.replace(/{{route_path}}/g, route.path);
+			tmpContent = tmpContent.replace(/{{module_name_formated}}/g, ModuleNameFormated());
+			tmpContent = tmpContent.replace(/{{route_controller}}/g, route.controller);
+			tmpContent = tmpContent.replace(/{{route_method}}/g, route.method);
+			tmpContent = tmpContent.replace(/{{route_title}}/g, route.title);
+			tmpContent = tmpContent.replace(/{{route_requirements}}/g, route.requirements);
+			if (route.admin_route) {
+				tmpContent = tmpContent.replace(/{{admin}}/g, "  options:\r\n    _admin_route: TRUE\r\n\r\n");
+			}
+			else {
+				tmpContent = tmpContent.replace(/{{admin}}/g, "");
+			}
+
+			newContent += tmpContent
+		}
+		fs.writeFile("./" + config.name + "/" + config.name + ".routing.yml", newContent, function (err) {
+		  if (err) throw err;
+		  console.log('Saved!');
+		});
+	}
 }
 
 function Controllers () {
@@ -143,7 +221,7 @@ function Controllers () {
 			}
 			newContent = newContent.replace(/{{libs}}/g, libs);
 
-			fs.appendFile("./" + config.name + "/src/Controller/" + ModuleNameFormated() + capitalize(controller.name) + "Controller.php", newContent, function (err) {
+			fs.writeFile("./" + config.name + "/src/Controller/" + ModuleNameFormated() + capitalize(controller.name) + "Controller.php", newContent, function (err) {
 			  if (err) throw err;
 			  console.log('Saved!');
 			});
@@ -164,7 +242,7 @@ function Forms () {
 			newContent = newContent.replace(/{{form_id}}/g, form.id);
 
 
-			fs.appendFile("./" + config.name + "/src/Form/" + ModuleNameFormated() + capitalize(form.name) + "Form.php", newContent, function (err) {
+			fs.writeFile("./" + config.name + "/src/Form/" + ModuleNameFormated() + capitalize(form.name) + "Form.php", newContent, function (err) {
 			  if (err) throw err;
 			  console.log('Saved!');
 			});
@@ -194,7 +272,7 @@ function Blocks () {
 			}
 			newContent = newContent.replace(/{{libs}}/g, libs);
 
-			fs.appendFile("./" + config.name + "/src/Plugin/Block/" + ModuleNameFormated() + capitalize(block.name) + "Block.php", newContent, function (err) {
+			fs.writeFile("./" + config.name + "/src/Plugin/Block/" + ModuleNameFormated() + capitalize(block.name) + "Block.php", newContent, function (err) {
 			  if (err) throw err;
 			  console.log('Saved!');
 			});
@@ -225,13 +303,13 @@ function Services () {
 			contentClass = contentClass.replace(/{{module_name}}/g, config.name.toLowerCase());
 			contentClass = contentClass.replace(/{{service_name}}/g, capitalize(service.name));
 
-			fs.appendFile("./" + config.name + "/src/" + capitalize(service.name) + "Service.php", contentClass, function (err) {
+			fs.writeFile("./" + config.name + "/src/" + capitalize(service.name) + "Service.php", contentClass, function (err) {
 			  if (err) throw err;
 			  console.log('Saved!');
 			});
 		}
 
-		fs.appendFile("./" + config.name + "/" + config.name + ".services.yml", serviceYml, function (err) {
+		fs.writeFile("./" + config.name + "/" + config.name + ".services.yml", serviceYml, function (err) {
 		  if (err) throw err;
 		  console.log('Saved!');
 		});
