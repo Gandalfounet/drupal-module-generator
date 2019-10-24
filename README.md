@@ -1,4 +1,4 @@
-# Generate drupal module using Node JS
+# Generate drupal 8 module using Node JS
 
 ## Getting Started
 
