@@ -46,7 +46,7 @@ Doc incoming.
    "description" : "Description",
    "package" : "Custom Module",
    "dependencies" : [
-   	"block"
+      "block"
    ],
    "db":[ 
       { 
@@ -133,20 +133,11 @@ Doc incoming.
    "themes":[ 
       { 
          "name":"theme1",
-         "template_name":"theme1",
-         "variables":[ 
-            { 
-               "variable":"notifications",
-               "default_value":null
-            }
-         ]
+         "template_name":"theme1"
       },
       { 
          "name":"theme2",
-         "template_name":"theme2",
-         "variables":[ 
-
-         ]
+         "template_name":"theme2"
       }
    ],
    "controllers":[ 
