@@ -18,6 +18,6 @@
   "homepage": "https://github.com/Gandalfounet/drupal-module-generator#readme",
   "dependencies": {
     "fs": "0.0.1-security",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.6"
   }
 }
